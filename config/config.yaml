@@ -1,0 +1,8 @@
+#configfile config.yaml
+workdir : "C:/Users/jurri/PycharmProjects/dataProcessingSTATR"
+threads : 8
+samples :
+    Eco_Ctrl1 : A
+    Eco_Ctrl2 : B
+    Eco_Exp1 : C
+    Eco_Exp2 : D
