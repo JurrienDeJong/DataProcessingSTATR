@@ -2,16 +2,15 @@
 
 rule generateProfile:
     input:
-        gffAnno = "out/CDSAnno/CDSAnno.gff",
-        bed = "out/decompiled/{sample}.bed",
-        script = "scripts/GenerateProfile.py",
-        # Select either 5'or 3':
-        primeType = "5",
-        normalization = 1000000
+        gffAnno =  config["workdir"] + "out/CDSAnno/CDSAnno.gff",
+        bed =  config["workdir"] + "out/decompiled/{sample}.bed",
+        script =  config["workdir"] + "scripts/GenerateProfile.py",
     output:
-        "out/metaAnalysis/{sample}_profile.gff"
+        config["workdir"] + "out/metaAnalysis/{sample}_profile.gff"
+    benchmark:
+        "benchmarks/metaAnalysis/{sample}.generate_profile.benchmark.txt"
     message:
-        ''
+        'Generates sample profile using script {input.script} which creates {output}'
     shell:
-        "python {input.script} -i {input.bed} -e {input.primeType} -a {input.gffAnno} -n {input.normalization} -o {output}"
+        "python {input.script} -i {input.bed} -e 5 -a {input.gffAnno} -n 1000000 -o {output}"
 

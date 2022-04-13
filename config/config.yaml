@@ -1,5 +1,5 @@
 #configfile config.yaml
-workdir : "C:/Users/jurri/PycharmProjects/dataProcessingSTATR"
+workdir : "/homes/jdejong/Thema11/dataProcessingSTATR/"
 threads : 8
 samples :
     Eco_Ctrl1 : A

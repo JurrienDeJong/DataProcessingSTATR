@@ -1,21 +1,30 @@
-configfile: "config/config.yaml"
 
 
 rule buildRefDatabase:
     input:
-        genome = 'data/NC_000913.3.fa'
+        genome = config["workdir"] + 'data/NC_000913.3.fa'
     output:
-        "./out/refDb/NC_000913.3"
+        touch('out/refDb/index.done'), # Flag file
+    params:
+        index_prefix= 'out/refDb/NC_000913.3'
+    threads:
+        int(config["threads"])
     message:
         'Performing bowtie build on {input.genome} which generates {output}'
     shell:
-        "bowtie2-build -f {input.genome} ./ReferenceDB/NC_000913.3"
+        "bowtie2-build {input.genome} {params.index_prefix} --threads {threads}"
 
 rule readMapping:
     input:
-        trimmedFiles = 'out/trimmedReads/{sample}_trimmed.fastq.gz',
-        refDb = 'out/refDb/NC_000913.3'
+        idx= 'out/refDb/index.done',
+        trimmedFiles = config["workdir"] + 'out/trimmedReads/{sample}_trimmed.fastq.gz',
     output:
-        './out/aligned/{sample}_mapping.sam'
+        config["workdir"] + 'out/aligned/{sample}_mapping.sam'
+    params:
+        index_prefix= 'out/refDb/NC_000913.3'
+    threads:
+        int(config["threads"])
+    benchmark:
+        "benchmarks/bowTie/{sample}.benchmark.txt"
     shell:
-        "bowtie2 -q -U {input.trimmedFiles} -x {input.refDb} -S {output} --local"
+        "bowtie2 -x {params.index_prefix} -U {input.trimmedFiles} -S {output} --threads {threads}"

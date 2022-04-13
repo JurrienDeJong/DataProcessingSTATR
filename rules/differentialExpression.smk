@@ -7,8 +7,10 @@ rule differentialExp:
         script= "scripts/GenerateProfile.py"
     output:
         "out/differentialExp/{sample}.cov"
+    benchmark:
+        "benchmarks/bedTools/{sample}.diffExp.benchmark.txt"
     message:
-        ''
+        'Creates cov files using {input.bed} with script {input.script}'
     shell:
         "bedtools coverage -a {input.gffAnno} -b {input.bed} -s > {output}"
 

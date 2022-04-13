@@ -1,6 +1,4 @@
-# rule all:
-#     input:
-#         "out/CDSAnno/CDSAnno.gff3"
+
 
 rule checkPeriodicity:
     input:
@@ -9,7 +7,9 @@ rule checkPeriodicity:
         script = "scripts/CheckPeriodicity.py"
     output:
         "out/metaAnalysis/MetaPositionalDensity_{sample}.txt"
+    benchmark:
+        "benchmarks/metaAnalysis/{sample}.check_periodicity.benchmark.txt"
     message:
-        ''
+        'Using {input.script} to generate {output}'
     shell:
         "python {input.script} -i {input.bed} -a {input.gffAnno} -o {output}"

@@ -1,19 +1,13 @@
-configfile: "config/config.yaml"
-
-workdir : config["workdir"]
-
-rule all:
-    input:
-        expand("./out/trimmedReads/{sample}_trimmed.fastq.gz", sample = config["samples"])
-
 rule trimmomatic:
     input:
-        fastq = 'data/{sample}.fastq.gz',
-        adapter = "tools/trimmomatic/adapters/RiboSeq_adapter_as.fa"
+        fastq = config["workdir"] + 'data/{sample}.fastq.gz',
+        adapter = config["workdir"] + "tools/trimmomatic/adapters/RiboSeq_adapter_as.fa"
     output:
-        "./out/trimmedReads/{sample}_trimmed.fastq.gz"
+        config["workdir"] + "out/trimmedReads/{sample}_trimmed.fastq.gz"
     threads:
         int(config["threads"])
+    benchmark:
+        "benchmarks/trimming/{sample}.benchmark.txt"
     message:
         'Performing trimmomatic on {input.fastq} which generates {output}'
     shell:

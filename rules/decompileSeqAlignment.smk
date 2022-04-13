@@ -1,26 +1,32 @@
-configfile: "config/config.yaml"
-
 
 rule samtoolsView:
     input:
-        aligned = 'out/aligned/{sample}_mapping.sam'
+        aligned = config["workdir"] + 'out/aligned/{sample}_mapping.sam'
     output:
-        "./out/decompiled/{sample}_mapping.bam"
+        config["workdir"] + "out/decompiled/{sample}_mapping.bam"
+    benchmark:
+        "benchmarks/samView/{sample}.view.benchmark.txt"
     shell:
         "samtools view -bS {input.aligned} > {output}"
 
 rule samtoolsSort:
     input:
-        decompiled = 'out/decompiled/{sample}_mapping.bam'
+        decompiled = config["workdir"] + 'out/decompiled/{sample}_mapping.bam'
     output:
-        './out/decompiled/{sample}_mapping.sorted.bam'
+        config["workdir"] + 'out/decompiled/{sample}_mapping.sorted.bam'
+    threads:
+        int(config["threads"])
+    benchmark:
+        "benchmarks/samTools/{sample}.sort.benchmark.txt"
     shell:
-        "samtools sort {input.decompiled} {output}"
+        "samtools sort {input.decompiled} -o {output} --threads {threads}"
 
 rule bedtoolsBamToBed:
     input:
-        sorted = 'out/decompiled/{sample}_mapping.sorted.bam'
+        sorted = config["workdir"] + 'out/decompiled/{sample}_mapping.sorted.bam'
     output:
-        './out/decompiled/{sample}.bed'
+        config["workdir"] + 'out/decompiled/{sample}.bed'
+    benchmark:
+        "benchmarks/bedTools/{sample}.benchmark.txt"
     shell:
         "bedtools bamtobed -i {input.sorted} > {output}"
