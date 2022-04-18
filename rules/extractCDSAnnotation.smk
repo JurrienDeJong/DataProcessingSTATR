@@ -1,10 +1,20 @@
-rule getCDSAnno:
-    input:
-        script= config["workdir"] + "scripts/ParseGenomeAnnotation.py",
-        infile = config["workdir"] + 'data/NC_000913.3.gff3'
-    output:
-        config["workdir"] + "out/CDSAnno/CDSAnno.gff"
-    message:
-        'Using {input.script} which uses {input.infile} to generate {output}'
-    shell:
-        "python {input.script} -i {input.infile} -o {output}"
+
+"""
+This snakefile converts the reference genome to a gff3 file and extract the CDS annotation along the way.
+"""
+
+rule parse_genome_annotation:
+                      input:
+                          config["workdir"] + "data/" + config["ref_genome"] + config["extensions"]["anno"]
+
+                      output:
+                          config["outDir"] + "refDb/" + config["ref_genome"] + config["extensions"]["created_anno"]
+
+                      threads: int(config["threads"])
+
+                      message: "Parse genome anno file:"
+
+                      log: "logs/referenceDB/" + config["ref_genome"] + "_CDS.log"
+
+                      script:
+                          config["workdir"] + "scripts/python/ParseGenomeAnnotation.py"

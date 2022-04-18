@@ -1,8 +1,29 @@
 #configfile config.yaml
+
 workdir : "/homes/jdejong/Thema11/dataProcessingSTATR/"
-threads : 8
-samples :
-    Eco_Ctrl1 : A
-    Eco_Ctrl2 : B
-    Eco_Exp1 : C
-    Eco_Exp2 : D
+outDir : "out/"
+
+samples: ['Eco_Ctrl1', 'Eco_Ctrl2', 'Eco_Exp1', 'Eco_Exp2']
+
+threads: 16
+
+trimm:
+  adapter: tools/trimmomatic/adapters/RiboSeq_adapter_as.fa
+  jar: tools/trimmomatic/trimmomatic-0.39.jar
+  phred: -phred33
+  minlen: 12
+  maxmismatch: 2
+  pairend: 30
+  minscore: 6
+  slidwindow: 4
+  minqual: 15
+
+
+extensions:
+  raw: .fastq.gz
+  ref: .fa
+  anno: .gff3
+  created_anno : _CDS.gff
+  gff : gff
+
+ref_genome: NC_000913.3
