@@ -92,6 +92,7 @@ ref genomes can be found on: [NCBI](https://www.ncbi.nlm.nih.gov/nuccore)
 ------------------------------------------------------------------------
 
 ## Installing snakemake
+# Extracted from the web:
 
 Required software:
 
